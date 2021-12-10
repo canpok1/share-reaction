@@ -3,18 +3,56 @@
 <head>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        let socket = io();
-        let el;
+        let enablePlay = false;
 
-        socket.on('time', (timeString) => {
-            el = document.getElementById('server-time');
-            el.innerHTML = 'Server time: ' + timeString;
+        let socket = io();
+        socket.on('clapped', (name) => {
+            console.log(name + "が拍手しました");
+            play();
         });
+
+        function setEnable(enable) {
+            enablePlay = enable;
+        }
+
+        function play() {
+            if (!enablePlay) {
+                return;
+            }
+
+            const audioPath = "/audio/clap.m4a";
+            try {
+                const audioCtx = new AudioContext();
+
+                const audioEle = new Audio();
+                audioEle.src = audioPath;
+                audioEle.autoplay = true;
+                audioEle.preload = "auto";
+                audioEle.addEventListener("ended", function () {
+                    audioCtx.close();
+                });
+
+                const audioSourceNode = audioCtx.createMediaElementSource(audioEle);
+
+                audioSourceNode.connect(audioCtx.destination);
+            } catch (error) {
+                console.log("error occured!!! error:" + error);
+            }
+        }
+
+        function clap() {
+            play();
+            socket.emit("clap", document.getElementById('username').value);
+        }
     </script>
 </head>
 
 <body>
-    <p id="server-time"></p>
+    <label>ユーザー名
+        <input type="text" id="username">
+    </label>
+    <label><input type="checkbox" onchange="setEnable(this.checked);">音を鳴らす</label>
+    <input type="button" value="拍手する" onclick="clap();">
 </body>
 
 </html>
