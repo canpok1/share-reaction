@@ -16,10 +16,18 @@ const io = socketIO(server);
 
 io.on('connection', (socket) => {
     console.log('Client connected');
+
+    let room = '';
+
     socket.on('disconnect', () => console.log('Client disconnected'));
-    socket.on('clap', (name) => {
-        console.log('clapped, name:' + name);
-        socket.broadcast.emit('clapped', name);
+    socket.on('join', (data) => {
+        room = data;
+        console.log('join, room:' + room);
+        socket.join(room);
+    });
+    socket.on('reaction', (reactionType) => {
+        console.log(`[room:${room}] reaction type:${reactionType}`);
+        socket.broadcast.to(room).emit('reaction', reactionType);
     });
 });
 

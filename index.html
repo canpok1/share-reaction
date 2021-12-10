@@ -6,16 +6,35 @@
         let enablePlay = false;
 
         let socket = io();
-        socket.on('clapped', (name) => {
-            console.log(name + "が拍手しました");
-            play();
+        socket.on("connect", () => {
+            console.log("connected");
         });
+        socket.on("disconnect", () => {
+            console.log("disconnected");
+            leave();
+        });
+        socket.on('reaction', (reactionType) => {
+            play(reactionType);
+        });
+
+        function join() {
+            socket.emit("join", document.getElementById('room').value);
+            document.getElementById('room').setAttribute("disabled", true);
+            document.getElementById('join-button').setAttribute("disabled", true);
+            document.getElementById('clap-button').removeAttribute("disabled");
+        }
+
+        function leave() {
+            document.getElementById('room').removeAttribute("disabled");
+            document.getElementById('join-button').removeAttribute("disabled");
+            document.getElementById('clap-button').setAttribute("disabled", true);
+        }
 
         function setEnable(enable) {
             enablePlay = enable;
         }
 
-        function play() {
+        function play(reactionType) {
             if (!enablePlay) {
                 return;
             }
@@ -40,19 +59,21 @@
             }
         }
 
-        function clap() {
-            play();
-            socket.emit("clap", document.getElementById('username').value);
+        function reaction(reactionType) {
+            socket.emit("reaction", reactionType);
+            play(reactionType);
         }
     </script>
 </head>
 
 <body>
-    <label>ユーザー名
-        <input type="text" id="username">
+    <label>ルーム名
+        <input type="text" id="room">
     </label>
     <label><input type="checkbox" onchange="setEnable(this.checked);">音を鳴らす</label>
-    <input type="button" value="拍手する" onclick="clap();">
+
+    <input type="button" id="join-button" value="入室する" onclick="join();">
+    <input type="button" id="clap-button" value="拍手する" onclick="reaction('clap');" disabled>
 </body>
 
 </html>
