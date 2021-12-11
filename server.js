@@ -4,11 +4,23 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const PORT = process.env.PORT || 8080;
-const INDEX = '/index.html';
 
 const app = express();
-app.get('/', (req, res) => res.sendFile(__dirname + INDEX));
+const router = express.Router();
+
+app.set("view engine", "ejs");
+app.set("views", "views");
+
+app.get('/', (req, res) => res.sendFile(__dirname + "/index.html"));
+
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`));
+app.use(
+    router.get("/rooms/:id", (req, res, next) => {
+        const roomId = req.params.id;
+        res.render("room", { roomId: roomId });
+    })
+);
 
 const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
