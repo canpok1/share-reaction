@@ -1,34 +1,40 @@
-let enablePlay = false;
+let params = {
+    socket: null,
+    enablePlay: false,
+    roomId: ""
+};
 
-let socket = io();
-socket.on("connect", () => {
-    console.log("connected");
-});
-socket.on("disconnect", () => {
-    console.log("disconnected");
-    leave();
-});
-socket.on('reaction', (reactionType) => {
-    play(reactionType);
-});
+function init(roomId) {
+    params.socket = io();
+    params.roomId = roomId;
+    params.socket.on("connect", () => {
+        console.log("connected");
+        join();
+    });
+    params.socket.on("disconnect", () => {
+        console.log("disconnected");
+        leave();
+    });
+    params.socket.on('reaction', (reactionType) => {
+        play(reactionType);
+    });
+}
 
-function join(roomId) {
-    socket.emit("join", roomId);
-    document.getElementById('join-button').setAttribute("disabled", true);
+function join() {
+    params.socket.emit("join", params.roomId);
     document.getElementById('clap-button').removeAttribute("disabled");
 }
 
 function leave() {
-    document.getElementById('join-button').removeAttribute("disabled");
     document.getElementById('clap-button').setAttribute("disabled", true);
 }
 
 function setEnable(enable) {
-    enablePlay = enable;
+    params.enablePlay = enable;
 }
 
 function play(reactionType) {
-    if (!enablePlay) {
+    if (!params.enablePlay) {
         return;
     }
 
@@ -53,6 +59,6 @@ function play(reactionType) {
 }
 
 function reaction(reactionType) {
-    socket.emit("reaction", reactionType);
+    params.socket.emit("reaction", reactionType);
     play(reactionType);
 }

@@ -5,14 +5,14 @@
     <script src="/js/room.js"></script>
 </head>
 
-<body>
+<body onload="init('<%=roomId %>');">
     <h1>
         ルームID：<%=roomId %>
     </h1>
-    <label><input type="checkbox" onchange="setEnable(this.checked);">音を鳴らす</label>
-
-    <input type="button" id="join-button" value="入室する" onclick="join('<%=roomId %>');">
-    <input type="button" id="clap-button" value="拍手する" onclick="reaction('clap');" disabled>
+    <div>
+        <label><input type="checkbox" onchange="setEnable(this.checked);">音を鳴らす</label>
+        <input type="button" id="clap-button" value="拍手する" onclick="reaction('clap');" disabled>
+    </div>
 </body>
 
 </html>
