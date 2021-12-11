@@ -2,19 +2,21 @@ let params = {
     socket: null,
     mute: false,
     volume: 0,
-    roomId: ''
+    roomId: '',
+    playingCount: 0,
 };
 
 const AUDIOS = {
     clap: [
-        '/audio/clap.m4a',
-        '/audio/clap_2.m4a',
-        '/audio/clap_3.m4a',
+        '/audio/clap_1.mp3',
+        '/audio/clap_2.mp3',
+        '/audio/clap_3.mp3',
     ]
 };
 
 const VOLUME_MAX = 100;
 const VOLUME_MIN = 0;
+const PLAYING_COUNT_MAX = 30;
 
 function init(roomId) {
     params.socket = io();
@@ -64,6 +66,12 @@ function play(reactionType) {
         console.log(`reactionType:${reactionType} is not supported`);
         return;
     }
+    if (params.playingCount > PLAYING_COUNT_MAX) {
+        console.log(`skip play [playingCount:${params.playingCount}]`);
+        return;
+    }
+    params.playingCount++;
+
     const audios = AUDIOS[reactionType];
 
     const audioCtx = new AudioContext();
@@ -74,6 +82,7 @@ function play(reactionType) {
     audioEle.preload = 'auto';
     audioEle.addEventListener('ended', function () {
         audioCtx.close();
+        params.playingCount--;
     });
     const audioSourceNode = audioCtx.createMediaElementSource(audioEle);
 
