@@ -5,8 +5,12 @@ let params = {
     roomId: ''
 };
 
-const audios = {
-    clap: '/audio/clap.m4a'
+const AUDIOS = {
+    clap: [
+        '/audio/clap.m4a',
+        '/audio/clap_2.m4a',
+        '/audio/clap_3.m4a',
+    ]
 };
 
 const VOLUME_MAX = 100;
@@ -56,31 +60,35 @@ function play(reactionType) {
     if (params.mute) {
         return;
     }
-
-    try {
-        const audioCtx = new AudioContext();
-
-        const audioEle = new Audio();
-        audioEle.src = audios[reactionType];
-        audioEle.autoplay = true;
-        audioEle.preload = 'auto';
-        audioEle.addEventListener('ended', function () {
-            audioCtx.close();
-        });
-        const audioSourceNode = audioCtx.createMediaElementSource(audioEle);
-
-        const gainNode = audioCtx.createGain();
-        gainNode.gain.value = params.volume / VOLUME_MAX;
-
-        audioSourceNode.connect(gainNode);
-        gainNode.connect(audioCtx.destination)
-
-    } catch (error) {
-        console.log('error occured!!! error:' + error);
+    if (!(reactionType in AUDIOS)) {
+        console.log(`reactionType:${reactionType} is not supported`);
+        return;
     }
+    const audios = AUDIOS[reactionType];
+
+    const audioCtx = new AudioContext();
+
+    const audioEle = new Audio();
+    audioEle.src = audios[Math.floor(Math.random() * audios.length)];
+    audioEle.autoplay = true;
+    audioEle.preload = 'auto';
+    audioEle.addEventListener('ended', function () {
+        audioCtx.close();
+    });
+    const audioSourceNode = audioCtx.createMediaElementSource(audioEle);
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = params.volume / VOLUME_MAX;
+
+    audioSourceNode.connect(gainNode);
+    gainNode.connect(audioCtx.destination)
 }
 
 function reaction(reactionType) {
     params.socket.emit('reaction', reactionType);
     play(reactionType);
+}
+
+function copyUrl() {
+    navigator.clipboard.writeText(location.href);
 }
