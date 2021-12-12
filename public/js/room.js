@@ -11,12 +11,15 @@ const AUDIOS = {
         '/audio/clap_1.mp3',
         '/audio/clap_2.mp3',
         '/audio/clap_3.mp3',
+        '/audio/clap_4.mp3',
+        '/audio/clap_5.mp3',
+        '/audio/clap_6.mp3',
     ]
 };
 
 const VOLUME_MAX = 100;
 const VOLUME_MIN = 0;
-const PLAYING_COUNT_MAX = 30;
+const PLAYING_COUNT_MAX = 50;
 
 function init(roomId) {
     params.socket = io();
