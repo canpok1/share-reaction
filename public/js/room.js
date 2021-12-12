@@ -17,8 +17,6 @@ const AUDIOS = {
 const VOLUME_MAX = 100;
 const VOLUME_MIN = 0;
 const PLAYING_COUNT_MAX = 30;
-const HEATMAP_COUNT_WIDTH = 50;
-const HEATMAP_COUNT_HEIGHT = 5;
 
 function init(roomId) {
     params.socket = io();
