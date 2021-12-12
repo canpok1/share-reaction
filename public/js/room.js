@@ -1,7 +1,7 @@
 let params = {
     socket: null,
-    mute: false,
-    volume: 0,
+    mute: true,
+    volume: 50,
     roomId: '',
     playingCount: 0,
 };
