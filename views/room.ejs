@@ -34,6 +34,17 @@
         </div>
     </header>
     <main class="container text-center">
+        <section class="row">
+            <svg class="col-12 heatmap mt-3 bg-light" width="1250" viewBox="0, 0, 1250, 125">
+                <% for (var j=0; j < 5; j++) { %>
+                    <% for (var i=0; i < 50; i++) { %>
+                        <rect class="heatmap-cell inactive" data-heatmap-index="<%= j * 50 + i %>" x="<%= i * 25 %>"
+                            y="<%= j * 25 %>" rx="2" ry="2" width="20" height="20"></rect>
+                        <% } %>
+                            <% } %>
+            </svg>
+        </section>
+
         <section class="p-4">
             <div class="row">
                 <div class="col">
@@ -59,8 +70,8 @@
             <div class="manual text-start">
                 <h3>使い方</h3>
                 <p>
-                    同じページを見ている人のリアクションを音で共有できます。<br>
-                    あなたのリアクションが皆に届き、皆のリアクションがあなたに届きます。<br>
+                    同じページを見ている人のリアクションが音で流れます。<br>
+                    リアクションが多いほど画面が赤くなります。<br>
                     皆にこのページのURLを共有して参加してもらいましょう。
                 </p>
                 <button class="btn btn-secondary" onclick="copyUrl()">URLをコピーする</button>

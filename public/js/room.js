@@ -17,6 +17,8 @@ const AUDIOS = {
 const VOLUME_MAX = 100;
 const VOLUME_MIN = 0;
 const PLAYING_COUNT_MAX = 30;
+const HEATMAP_COUNT_WIDTH = 50;
+const HEATMAP_COUNT_HEIGHT = 5;
 
 function init(roomId) {
     params.socket = io();
@@ -31,6 +33,7 @@ function init(roomId) {
     });
     params.socket.on('reaction', (reactionType) => {
         play(reactionType);
+        setHeatmapActiveRandom();
     });
 }
 
@@ -96,8 +99,26 @@ function play(reactionType) {
 function reaction(reactionType) {
     params.socket.emit('reaction', reactionType);
     play(reactionType);
+    setHeatmapActiveRandom();
 }
 
 function copyUrl() {
     navigator.clipboard.writeText(location.href);
+}
+
+function setHeatmapActiveRandom() {
+    let cells = Array.from(document.getElementsByClassName('heatmap-cell inactive'));
+    if (cells.length == 0) {
+        return;
+    }
+
+    const index = Math.floor(Math.random() * cells.length);
+    const cell = cells[index];
+    cell.classList.add('active');
+    cell.classList.remove('inactive');
+
+    setTimeout(() => {
+        cell.classList.remove('active');
+        cell.classList.add('inactive');
+    }, 4000);
 }

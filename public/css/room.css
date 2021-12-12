@@ -6,3 +6,15 @@
     width: fit-content;
     margin: auto;
 }
+
+.heatmap > rect {
+    fill:rgb(255, 0, 0);
+}
+
+.heatmap > rect.active {
+    opacity:1.0;
+}
+
+.heatmap > rect.inactive {
+    opacity:0.0;
+}
