@@ -1,5 +1,9 @@
 version: "3"
 services:
+  web:
+    build:
+      context: ../
+      dockerfile: Dockerfile
   nginx:
     image: nginx:1.21-alpine
     ports:
