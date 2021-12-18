@@ -1,6 +1,8 @@
 #!/bin/bash
 cd $(dirname $0)
 
+# create ssl_cert
+
 domain="remote-audience.ktnet.info"
 
 docker run -p 80:80 \
@@ -19,3 +21,4 @@ aft=$(sudo ls -l ./letsencrypt/live/${domain}/)
 
 echo "## cert ##"
 echo "$aft"
+
