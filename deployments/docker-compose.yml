@@ -20,3 +20,7 @@ services:
         source: "./www"
         target: "/var/www"
 
+networks:
+  default:
+    name: remote-audience-network
+
